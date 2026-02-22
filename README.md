@@ -10,7 +10,7 @@ and model families on public rehabilitation datasets.
 
 ------------------------------------------------------------------------
 
-## 📌 Overview
+## Overview
 
 This project investigates how **deployment regime** (generalized,
 per-exercise, individualized) influences model performance in
@@ -31,7 +31,7 @@ interact under realistic clinical constraints.
 
 ------------------------------------------------------------------------
 
-## 📂 Repository Structure
+## Repository Structure
 
 ### Notebooks
 
@@ -47,7 +47,7 @@ interact under realistic clinical constraints.
 
 ------------------------------------------------------------------------
 
-## 🔬 Experimental Framework
+## Experimental Framework
 
 ### Deployment Regimes
 
@@ -67,7 +67,7 @@ Vector Machine (SVM) - Long Short-Term Memory (LSTM)
 
 ------------------------------------------------------------------------
 
-## 📊 Evaluation Metrics
+## Evaluation Metrics
 
 -   Balanced Accuracy (BA)
 -   Area Under the Curve (AUC)
@@ -77,7 +77,7 @@ Vector Machine (SVM) - Long Short-Term Memory (LSTM)
 
 ------------------------------------------------------------------------
 
-## 🛡 Robustness Analysis
+## Robustness Analysis
 
 Time-shuffle stress testing was conducted to assess whether models rely
 on temporal structure.
@@ -87,7 +87,7 @@ Occlusion simulation
 
 ------------------------------------------------------------------------
 
-## 🧠 Interpretability
+## Interpretability
 
 -   SHAP-based feature attribution (LR)
 -   Temporal and joint attention visualization (DA-TCN)
@@ -98,7 +98,7 @@ Occlusion simulation
 
 ------------------------------------------------------------------------
 
-## 📦 Data
+## Data
 
 This repository uses the public datasets:
 
@@ -110,7 +110,7 @@ their official sources.
 
 ------------------------------------------------------------------------
 
-## ⚙️ Requirements
+## Requirements
 
 Typical dependencies:
 
@@ -125,7 +125,7 @@ Typical dependencies:
 
 ------------------------------------------------------------------------
 
-## 🚀 Reproducibility
+## Reproducibility
 
 1.  Download dataset.
 2.  Adjust dataset paths in notebooks.
@@ -135,12 +135,12 @@ All experiments use fixed random seeds.
 
 ------------------------------------------------------------------------
 
-## 📖 Citation
+## Citation
 
 If you use this code, please cite the associated manuscript.
 
 ------------------------------------------------------------------------
 
-## 🧾 License
+## License
 
 Provided for academic and research use.
