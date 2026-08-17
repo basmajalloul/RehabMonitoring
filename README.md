@@ -35,11 +35,9 @@ The repository also includes temporal-order stress testing, controlled skeleton 
 ```text
 RehabMonitoring/
 ├── README.md
-├── requirements.txt
-└── notebooks/
-    ├── 01_REHAB24_6_primary_analysis.ipynb
-    ├── 02_IntelliRehabDS_primary_analysis.ipynb
-    └── 03_cross_method_temporal_stress_validation.ipynb
+└── 01_REHAB24_6_primary_analysis.ipynb
+    02_IntelliRehabDS_primary_analysis.ipynb
+    03_cross_method_temporal_stress_validation.ipynb
 ```
 
 ### `01_REHAB24_6_primary_analysis.ipynb`
@@ -169,31 +167,6 @@ The cross-method validation notebook evaluates fixed implementations of:
 - **SVM**: RBF kernel, `C = 1`, `gamma = scale`, class-balanced weighting;
 - **XGBoost**: 300 estimators, maximum depth 5, learning rate 0.05;
 - **LSTM**: single 64-unit recurrent layer, dropout 0.30, Adam optimization.
-
-## Evaluation Metrics
-
-### Balanced Accuracy
-
-Balanced Accuracy (BA) is the primary metric:
-
-\[
-\mathrm{BA}
-=
-\frac{1}{2}
-\left(
-\frac{\mathrm{TP}}{\mathrm{TP}+\mathrm{FN}}
-+
-\frac{\mathrm{TN}}{\mathrm{TN}+\mathrm{FP}}
-\right)
-\]
-
-It gives equal weight to sensitivity and specificity and is therefore appropriate for unequal class distributions.
-
-### ROC-AUC
-
-The area under the receiver operating characteristic curve (ROC-AUC) is reported as a secondary discrimination metric.
-
-ROC-AUC evaluates ranking performance across classification thresholds, whereas BA is computed from class predictions at the fixed decision threshold used by the models.
 
 ## Statistical Analysis
 
