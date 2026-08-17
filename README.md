@@ -2,8 +2,9 @@
 
 This repository accompanies the manuscript:
 
-**"Regime-Aware Evaluation of Explainable Biomechanical Representations
-for Rehabilitation Monitoring"**
+**"Deployment-Aware Evaluation of Interpretable
+Skeletal Representations for Rehabilitation
+Movement Assessment"**
 
 It provides the experimental code used to evaluate deployment regimes
 and model families on public rehabilitation datasets.
