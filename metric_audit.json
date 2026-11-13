@@ -1,0 +1,54 @@
+{
+  "rehab": {
+    "generalized": {
+      "outer_units": 5,
+      "models": 3,
+      "unique_test_trials": 1072,
+      "participants": 10,
+      "max_metric_discrepancy": 1.1102230246251565e-16,
+      "max_summary_discrepancy": 1.1102230246251565e-16
+    },
+    "per_exercise": {
+      "outer_units": 30,
+      "models": 3,
+      "unique_test_trials": 1072,
+      "participants": 10,
+      "max_metric_discrepancy": 1.1102230246251565e-16,
+      "max_summary_discrepancy": 5.551115123125783e-17
+    },
+    "individualized": {
+      "outer_units": 1380,
+      "models": 3,
+      "unique_test_trials": 940,
+      "participants": 9,
+      "max_metric_discrepancy": 1.1102230246251565e-16,
+      "max_summary_discrepancy": 1.1102230246251565e-16
+    }
+  },
+  "intelli": {
+    "generalized": {
+      "outer_units": 5,
+      "models": 3,
+      "unique_test_trials": 2577,
+      "participants": 30,
+      "max_metric_discrepancy": 1.1102230246251565e-16,
+      "max_summary_discrepancy": 2.220446049250313e-16
+    },
+    "per_exercise": {
+      "outer_units": 42,
+      "models": 3,
+      "unique_test_trials": 2419,
+      "participants": 30,
+      "max_metric_discrepancy": 1.1102230246251565e-16,
+      "max_summary_discrepancy": 0.0
+    },
+    "individualized": {
+      "outer_units": 480,
+      "models": 3,
+      "unique_test_trials": 396,
+      "participants": 7,
+      "max_metric_discrepancy": 1.1102230246251565e-16,
+      "max_summary_discrepancy": 0.0
+    }
+  }
+}

@@ -1,0 +1,13 @@
+trial_id,filename,subject,session,exercise,repetition,correctness,posture,reason
+202_18_2_1_3_stand.txt,202_18_2_1_3_stand.txt,202,18,2,1,3,stand,label outside the original binary cohort
+202_18_3_2_3_stand.txt,202_18_3_2_3_stand.txt,202,18,3,2,3,stand,label outside the original binary cohort
+202_18_4_21_3_stand.txt,202_18_4_21_3_stand.txt,202,18,4,21,3,stand,label outside the original binary cohort
+202_18_4_22_3_stand.txt,202_18_4_22_3_stand.txt,202,18,4,22,3,stand,label outside the original binary cohort
+204_18_8_14_3_chair.txt,204_18_8_14_3_chair.txt,204,18,8,14,3,chair,label outside the original binary cohort
+204_18_8_15_3_chair.txt,204_18_8_15_3_chair.txt,204,18,8,15,3,chair,label outside the original binary cohort
+210_18_7_1_3_wheelchair.txt,210_18_7_1_3_wheelchair.txt,210,18,7,1,3,wheelchair,label outside the original binary cohort
+210_18_8_1_3_wheelchair.txt,210_18_8_1_3_wheelchair.txt,210,18,8,1,3,wheelchair,label outside the original binary cohort
+211_18_6_5_3_stand.txt,211_18_6_5_3_stand.txt,211,18,6,5,3,stand,label outside the original binary cohort
+211_18_7_5_3_stand.txt,211_18_7_5_3_stand.txt,211,18,7,5,3,stand,label outside the original binary cohort
+211_18_7_6_3_stand.txt,211_18_7_6_3_stand.txt,211,18,7,6,3,stand,label outside the original binary cohort
+214_18_6_5_3_Stand-frame.txt,214_18_6_5_3_Stand-frame.txt,214,18,6,5,3,Stand-frame,label outside the original binary cohort

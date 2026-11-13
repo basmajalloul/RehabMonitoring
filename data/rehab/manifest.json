@@ -1,0 +1,70 @@
+{
+  "angle_names": [
+    "L_elbow",
+    "R_elbow",
+    "L_knee",
+    "R_knee",
+    "L_shoulder",
+    "R_shoulder",
+    "L_hip",
+    "R_hip",
+    "torso_L_dev",
+    "torso_R_dev"
+  ],
+  "code_sha256": "1e4c80d2bccc75f098e219c3900c8413f75656199e8401cf19bc571a969afbd5",
+  "config": {
+    "comparison_bootstrap": 5000,
+    "cross_method": true,
+    "cross_method_lstm_epochs": 40,
+    "cross_method_repeats": 10,
+    "cross_method_trees": 300,
+    "da_max_epochs": 40,
+    "da_min_epochs": 10,
+    "da_patience": 6,
+    "da_trials_group": 25,
+    "da_trials_individual": 10,
+    "group_inner_folds": 4,
+    "individual_inner_folds": 3,
+    "individual_repeats": 30,
+    "individual_test_fraction": 0.3,
+    "joint_file_overrides": {},
+    "lr_c_grid": [
+      0.01,
+      0.03,
+      0.1,
+      0.3,
+      1.0,
+      3.0,
+      10.0
+    ],
+    "min_test_per_class": 2,
+    "outer_folds": 5,
+    "phase_bins": 5,
+    "robustness_bootstrap": 1000,
+    "robustness_seeds": 10,
+    "seed": 42
+  },
+  "data_sha256": "71305dc5b820fcff0cfe5dd91a1ee0db1531a0144ca1ef2db1dbf7bfaad8db44",
+  "dataset": "REHAB24-6",
+  "device_type": "cuda",
+  "label_definition": {
+    "0": "incorrect",
+    "1": "correct"
+  },
+  "n_exercises": 6,
+  "n_participants": 10,
+  "n_trials": 1072,
+  "profile": "full",
+  "protocol_version": "rehab24-v2.0",
+  "python": "3.13.16",
+  "versions": {
+    "joblib": "1.6.0",
+    "numpy": "2.4.6",
+    "optuna": "5.0.0",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.6.1",
+    "scipy": "1.16.3",
+    "torch": "2.14.1+cu130",
+    "xgboost": "3.4.1"
+  }
+}

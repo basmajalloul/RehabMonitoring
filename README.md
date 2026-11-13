@@ -1,372 +1,145 @@
-# Regime-Aware Evaluation of Skeleton-Based Rehabilitation Movement Assessment
+# Deployment-Aware Rehabilitation Movement Assessment
 
-This repository accompanies the manuscript:
+This repository accompanies the manuscript **Deployment-Aware Evaluation of Interpretable Skeletal Representations for Rehabilitation Movement Assessment**. The study compares movement classification for unseen participants, for a known exercise or gesture, and for participants with labelled calibration repetitions.
 
-**Deployment-Aware Evaluation of Interpretable Skeletal Representations for Rehabilitation Movement Assessment**
+The reproducibility package contains the executed notebooks, matched train/test and validation splits, held-out predictions, and exported results for REHAB24-6 and IntelliRehabDS. **Start with the saved predictions to verify the manuscript scores.** This check runs on a CPU and needs only the exported files.
 
-The repository contains the experimental notebooks used to evaluate how deployment regime, model family, temporal structure, robustness, and interpretability influence skeleton-based rehabilitation movement assessment across two public datasets: **REHAB24-6** and **IntelliRehabDS**.
-
-## Overview
-
-The study evaluates rehabilitation movement classification under three distinct deployment settings:
-
-- **Generalized evaluation**: subject-disjoint evaluation on previously unseen users.
-- **Task-specific evaluation**: exercise- or gesture-specific models evaluated on unseen users.
-- **Individualized evaluation**: within-subject, subject-task modeling using user-specific calibration data.
-
-The experiments use a harmonized, temporally normalized joint-angle representation in which each movement repetition is represented as a `100 × 10` trajectory. The same representation is used across model families to enable controlled comparisons.
-
-The primary comparison is between:
-
-- **Logistic Regression (LR)**
-- **Dual-Attention Temporal Convolutional Network (DA-TCN)**
-
-Additional validation includes:
-
-- Random Forest (RF)
-- Support Vector Machine (SVM)
-- XGBoost (XGB)
-- Long Short-Term Memory network (LSTM)
-
-The repository also includes temporal-order stress testing, controlled skeleton perturbations, movement-quality measures, SHAP-based attribution, and DA-TCN attention analysis.
-
-## Repository Structure
+## Repository contents
 
 ```text
-RehabMonitoring/
-├── README.md
-└── 01_REHAB24_6_primary_analysis.ipynb
-    02_IntelliRehabDS_primary_analysis.ipynb
-    03_cross_method_temporal_stress_validation.ipynb
+reproducibility/
+├── metric_audit.json
+├── notebooks/
+│   ├── REHAB24-6_executed.ipynb
+│   └── IntelliRehabDS_executed.ipynb
+└── data/
+    ├── rehab/
+    └── intelli/
 ```
 
-### `01_REHAB24_6_primary_analysis.ipynb`
+The paths below assume that the uploaded package is inside `reproducibility/`. If you unpacked its contents at the repository root, use the root as the package folder.
 
-Primary analysis for the **REHAB24-6** dataset.
+## Find the results behind the manuscript
 
-Includes:
+Paths in this table are relative to each dataset folder, `data/rehab/` or `data/intelli/`. The `per_exercise/` directory holds the per-gesture results for IntelliRehabDS.
 
-- dataset loading and preprocessing;
-- skeleton harmonization;
-- joint-angle extraction;
-- temporal normalization to 100 movement phases;
-- generalized evaluation;
-- task-specific evaluation;
-- individualized evaluation;
-- LR and DA-TCN comparison;
-- balanced accuracy and ROC-AUC evaluation;
-- statistical comparison between LR and DA-TCN;
-- movement-quality measures;
-- LR SHAP analysis;
-- DA-TCN attention analysis;
-- controlled robustness experiments.
+| To inspect | Files |
+|---|---|
+| Main performance table and full metric summaries | `manuscript/metric_summary_all_regimes.csv` |
+| Held-out scores and classifications for each regime | `{generalized,per_exercise,individualized}/predictions.csv` and `unit_metrics.csv` |
+| Exercise- or gesture-specific performance | `per_exercise/metric_summary_by_exercise.csv` |
+| Matched model comparisons | `manuscript/paired_comparisons_all_regimes.csv`, `per_exercise/across_exercise_comparison.csv`, and `individualized/participant_sensitivity.csv` |
+| Outer and inner split membership, unit counts, and exclusions | `splits/` and `data_audit/` |
+| Hyperparameters selected for each fit and candidate results | `manuscript/selected_parameters_all_regimes.csv` and `tuning_candidates.csv` in each regime |
+| Movement-quality descriptor comparisons | `generalized/mqm/mqm_class_comparisons.csv` |
+| Individualized attribution summaries | `individualized/explanations/` |
+| Test-time skeleton corruption experiments | `generalized/robustness/severity_summary.csv` and `slopes.csv` |
+| Additional classifiers and temporal-order stress tests | `supplement_cross_method/metric_summary.csv` and `shuffle_participant_sensitivity.csv` |
+| Run configuration, software versions, and fingerprints | `manifest.json` |
 
-### `02_IntelliRehabDS_primary_analysis.ipynb`
+## Verify the reported metrics
 
-Primary analysis for the **IntelliRehabDS** dataset.
+Each prediction row identifies the held-out repetition (`trial_id`), model, and evaluation unit (`unit`). `y_true` is the true label, `p_correct` is the predicted probability of correct execution, and `y_hat` is the predicted class. Correct execution is class `1`. The decision threshold is `p_correct >= 0.5`.
 
-Includes the same core evaluation pipeline as the REHAB24-6 notebook:
+The three model identifiers are `LR_angles` for trajectory logistic regression, `LR_features` for descriptor logistic regression, and `DA_TCN` for the dual-attention temporal convolutional network.
 
-- preprocessing and skeleton harmonization;
-- joint-angle representation;
-- generalized, task-specific, and individualized evaluation;
-- LR and DA-TCN comparison;
-- balanced accuracy and ROC-AUC evaluation;
-- statistical analysis;
-- movement-quality measures;
-- SHAP and attention analysis;
-- robustness testing.
+| Regime | REHAB24-6 | IntelliRehabDS | How to aggregate |
+|---|---:|---:|---|
+| Generalized | 5 outer folds | 5 outer folds | Average the metrics across subject-disjoint outer folds. |
+| Per-exercise or per-gesture | 30 eligible exercise–fold units | 42 eligible gesture–fold units | Average the metrics across eligible task–fold units. For task-specific results, average within each task. |
+| Individualized | 46 participant–exercise pairs | 16 participant–gesture pairs | Average the 30 holdouts within each pair, then give each pair equal weight. |
 
-### `03_cross_method_temporal_stress_validation.ipynb`
+`metric_audit.json` records the reconstruction of accuracy, balanced accuracy, precision, sensitivity, specificity, F1, and area under the receiver operating characteristic curve from the saved predictions. The largest absolute discrepancy in the audit was approximately `2.22e-16`.
 
-Cross-model validation and temporal-order stress testing for both datasets.
-
-This notebook evaluates:
-
-- Random Forest;
-- SVM;
-- XGBoost;
-- LSTM;
-
-under:
-
-- generalized evaluation;
-- individualized evaluation;
-- original temporally ordered trajectories;
-- temporally shuffled trajectories.
-
-For individualized temporal-shuffle analysis, repeated subject-task results are aggregated at participant level before statistical testing. Exact two-sided sign-flip tests are then applied across subjects, with Holm correction across the four model families within each dataset.
-
-The notebook reproduces the cross-method and temporal-shuffling results reported in the manuscript.
-
-## Joint-Angle Representation
-
-Both datasets are mapped to a common skeletal representation and transformed into anatomically interpretable joint-angle trajectories.
-
-Each repetition is temporally normalized to **100 movement phases**, producing an input representation of:
-
-```text
-100 time-normalized phases × 10 joint-angle channels
-```
-
-Flattened models operate on the phase-indexed representation as a fixed feature vector, while sequential models retain the explicit temporal dimension.
-
-The representation is designed to support comparison across heterogeneous skeletal sources while preserving movement-phase information.
-
-## Evaluation Regimes
-
-### Generalized
-
-Models are trained and evaluated using subject-disjoint folds.
-
-No participant appearing in the test fold is present in the corresponding training fold.
-
-This setting represents deployment to previously unseen users without user-specific calibration data.
-
-### Task-Specific
-
-Models are trained independently for each exercise or gesture while preserving subject-disjoint evaluation.
-
-This setting reduces movement heterogeneity while retaining cold-start generalization to unseen users.
-
-### Individualized
-
-Models are fitted separately within eligible subject-task pairs using repeated train/test splits.
-
-This setting represents user-specific calibration and should not be interpreted as unseen-subject or longitudinal generalization.
-
-Sparse subject-task groups that do not contain sufficient samples from both correctness classes are excluded before training.
-
-## Models
-
-### Logistic Regression
-
-Logistic Regression uses L2 regularization and class-balanced weighting.
-
-For generalized and task-specific evaluation, the inverse regularization strength `C` is selected inside the outer training partition using subject-disjoint inner cross-validation over:
-
-```text
-{0.01, 0.03, 0.1, 0.3, 1, 3, 10}
-```
-
-For individualized evaluation, `C = 1.0` is fixed across subject-task pairs.
-
-Features are standardized using statistics fitted on the training partition only.
-
-### DA-TCN
-
-The DA-TCN is a temporal convolutional model with angle- and temporal-attention mechanisms.
-
-Hyperparameter selection is performed using training data only, following the protocol described in the manuscript.
-
-### Additional Model Families
-
-The cross-method validation notebook evaluates fixed implementations of:
-
-- **Random Forest**: 300 trees, class-balanced weighting;
-- **SVM**: RBF kernel, `C = 1`, `gamma = scale`, class-balanced weighting;
-- **XGBoost**: 300 estimators, maximum depth 5, learning rate 0.05;
-- **LSTM**: single 64-unit recurrent layer, dropout 0.30, Adam optimization.
-
-## Statistical Analysis
-
-The manuscript uses paired statistical tests that match the evaluation unit of each experiment.
-
-Depending on the analysis, these include:
-
-- paired Wilcoxon signed-rank tests;
-- bootstrap confidence intervals for paired median differences;
-- exact subject-level sign-flip tests;
-- Benjamini-Hochberg false-discovery-rate correction;
-- Holm correction for cross-model temporal-shuffle comparisons.
-
-For individualized primary comparisons, results are paired by subject-task pair after averaging repeated splits.
-
-For the subject-aware temporal-shuffle sensitivity analysis, pair-level differences are first averaged within participant before exact sign-flip testing.
-
-## Temporal-Order Stress Test
-
-The temporal-shuffling experiment tests whether predictive performance depends on the ordering of movement phases.
-
-A deterministic frame permutation is applied consistently across all angle channels of each repetition.
-
-Models are then retrained and evaluated using the same split indices and model seeds used for the corresponding original-order experiment.
-
-The reported shuffle effect is:
-
-```text
-ΔBA = BA_shuffled − BA_original
-```
-
-Negative values indicate degradation after temporal-order disruption.
-
-The experiment measures predictive sensitivity to phase ordering; it is not intended as a direct measure of biomechanical temporal reasoning.
-
-## Robustness Analysis
-
-The primary notebooks also evaluate test-time sensitivity to controlled skeleton perturbations.
-
-Perturbation families include:
-
-- spatial jitter;
-- joint dropout;
-- burst occlusion;
-- frame dropping.
-
-Models are trained once on the clean training partition and then held fixed across all corruption levels.
-
-The corresponding uncorrupted test performance is therefore the experiment-specific clean baseline for the robustness trajectories.
-
-The experiments evaluate downstream predictive stability under controlled skeletal degradation.
-
-## Movement-Quality Measures
-
-Three post-hoc movement-quality measures are computed independently of the classifiers:
-
-- **Pose Similarity Metric (PSM)**
-- **Movement Smoothness Index (MSI)**
-- **Joint Deviation (JD)**
-
-These descriptors characterize complementary aspects of movement execution relative to task-specific reference trajectories.
-
-Correct and incorrect repetitions are compared using two-sided Mann-Whitney U tests, both globally and at task level.
-
-## Model Attribution
-
-### Logistic Regression
-
-SHAP values are used to identify phase-specific joint-angle features that contribute most strongly to LR predictions.
-
-### DA-TCN
-
-Angle and temporal attention weights are analyzed to inspect how the temporal model distributes internal weighting across movement features and phases.
-
-SHAP and attention are treated as complementary explanation mechanisms and are not interpreted as numerically equivalent measures of feature importance.
-
-Together with the movement-quality measures, these analyses support inspection of both movement deviations and the features associated with model decisions.
-
-## Datasets
-
-This repository uses two public rehabilitation datasets:
-
-- **REHAB24-6**
-- **IntelliRehabDS**
-
-The datasets are **not redistributed in this repository**.
-
-Please obtain each dataset from its official source and update the local paths in the corresponding notebook before execution.
-
-## Reproducibility
-
-Recommended workflow:
-
-1. Clone this repository.
-2. Create a Python environment.
-3. Install the required dependencies.
-4. Download REHAB24-6 and IntelliRehabDS from their official sources.
-5. Update dataset paths in the notebooks.
-6. Run the primary dataset notebooks.
-7. Run the cross-method temporal-stress notebook.
-
-Example:
+From the repository root, install the audit dependencies with `python -m pip install pandas numpy scikit-learn`, then run the check below. If the package folders are at the repository root, set `package = Path(".")`.
 
 ```bash
-git clone https://github.com/basmajalloul/RehabMonitoring.git
-cd RehabMonitoring
+python - <<'PY'
+from pathlib import Path
 
-python -m venv .venv
+import numpy as np
+import pandas as pd
+from sklearn.metrics import roc_auc_score
 
-# Linux/macOS
-source .venv/bin/activate
+package = Path("reproducibility")
+metrics = [
+    "accuracy", "balanced_accuracy", "precision",
+    "sensitivity", "specificity", "f1", "auc",
+]
 
-# Windows
-# .venv\Scripts\activate
+for dataset in ("rehab", "intelli"):
+    data = package / "data" / dataset
+    exported = pd.read_csv(data / "manuscript/metric_summary_all_regimes.csv")
 
-pip install -r requirements.txt
+    for regime in ("generalized", "per_exercise", "individualized"):
+        predictions = pd.read_csv(data / regime / "predictions.csv")
+        key = ["unit", "model", "trial_id"]
+        assert not predictions.duplicated(key).any()
+        assert predictions.groupby(["unit", "trial_id"])["model"].nunique().eq(3).all()
+
+        rows = []
+        for (unit, model), group in predictions.groupby(["unit", "model"]):
+            actual = group["y_true"].to_numpy() == 1
+            predicted = group["p_correct"].to_numpy() >= 0.5
+            np.testing.assert_array_equal(predicted, group["y_hat"].to_numpy())
+
+            tp = np.count_nonzero(actual & predicted)
+            tn = np.count_nonzero(~actual & ~predicted)
+            fp = np.count_nonzero(~actual & predicted)
+            fn = np.count_nonzero(actual & ~predicted)
+            sensitivity = tp / (tp + fn)
+            specificity = tn / (tn + fp)
+
+            rows.append({
+                "unit": unit,
+                "model": model,
+                "subject": group["subject"].iloc[0],
+                "exercise": group["exercise"].iloc[0],
+                "accuracy": (tp + tn) / len(group),
+                "balanced_accuracy": (sensitivity + specificity) / 2,
+                "precision": tp / (tp + fp) if tp + fp else 0.0,
+                "sensitivity": sensitivity,
+                "specificity": specificity,
+                "f1": 2 * tp / (2 * tp + fp + fn) if 2 * tp + fp + fn else 0.0,
+                "auc": roc_auc_score(actual, group["p_correct"]),
+            })
+
+        calculated = pd.DataFrame(rows)
+        expected = pd.read_csv(data / regime / "unit_metrics.csv")
+        index = ["unit", "model"]
+        observed = calculated.set_index(index)[metrics].sort_index()
+        expected = expected.set_index(index)[metrics].sort_index()
+        pd.testing.assert_index_equal(observed.index, expected.index)
+        np.testing.assert_allclose(observed, expected, rtol=0, atol=1e-10)
+
+        if regime == "individualized":
+            calculated = (
+                calculated.groupby(["model", "subject", "exercise"])[metrics]
+                .mean()
+                .reset_index()
+            )
+
+        expected_summary = exported[exported["regime"] == regime]
+        groups = calculated.groupby("model")[metrics]
+        for column, observed_summary in (("mean", groups.mean()), ("sd", groups.std())):
+            reference = expected_summary.pivot(index="model", columns="metric", values=column)
+            reference = reference.loc[observed_summary.index, metrics]
+            np.testing.assert_allclose(observed_summary, reference, rtol=0, atol=1e-10)
+
+        print(f"{dataset} / {regime}: seven metrics, means and SDs verified")
+PY
 ```
 
-Then launch Jupyter:
+For the pooled ROC curves and confusion counts in the two cross-subject regimes, combine held-out predictions by model within each regime. For individualized figures, average the holdout results within each eligible pair before averaging across pairs. A pooled ROC area can differ from the mean of fold-level ROC areas in the performance table.
 
-```bash
-jupyter notebook
-```
+## Rerun the analyses
 
-or:
+1. Download the public datasets from [REHAB24-6](https://zenodo.org/records/13305826) and [IntelliRehabDS](https://zenodo.org/records/4610859).
+2. Open the corresponding executed notebook. For REHAB24-6, set `DATA_ROOT` to the directory containing `Segmentation.csv`, `joints_names.txt`, and `2d_joints/`. For IntelliRehabDS, set `DATA_ROOT` to the extracted `Simplified/` directory and update `PROJECT_ROOT` if using the notebook's default path construction. Set `RESULTS_ROOT` to a writable location for the new run.
+3. Use a CUDA-capable PyTorch environment for the full experiment. The manifests record the original Python and package versions. The notebooks use NumPy, pandas, SciPy, scikit-learn, PyTorch, Optuna, Matplotlib, joblib, and tqdm, with XGBoost for the supplementary model comparisons.
+4. Run from the setup cell with `PROFILE = "full"`. Leave `RUN_CROSS_METHOD = True` to include the additional classifiers and the temporal-shuffle experiment. The `preview` profile uses smaller search budgets and fewer repetitions for checking setup.
+5. Compare the new exports with the corresponding manifests, split files, and metric summaries. Neural training can vary with hardware and software versions.
 
-```bash
-jupyter lab
-```
+Both notebooks use ten joint-angle trajectories over 100 normalized frames. The two logistic regression variants and the temporal network are tuned independently within the outer training data in all three regimes. Individualized fits use labelled repetitions from the same participant and task. The corruption analysis reuses the clean generalized fits for each model.
 
-## Main Dependencies
-
-The analysis uses standard scientific Python packages including:
-
-```text
-numpy
-pandas
-scipy
-scikit-learn
-xgboost
-tensorflow
-shap
-matplotlib
-seaborn
-optuna
-jupyter
-```
-
-Exact package versions may be provided in `requirements.txt` for reproducible execution.
-
-## Notes on Randomness
-
-Fixed seeds are used wherever supported.
-
-Some neural-network experiments may still show small numerical differences across environments because of stochastic optimization, hardware, TensorFlow/CUDA versions, or nondeterministic GPU operations.
-
-For robustness experiments, the clean baseline corresponds to the specific trained model instance used throughout the corruption trajectory and may therefore differ slightly from an independently trained clean model reported elsewhere in the analysis.
-
-## Outputs
-
-The notebooks produce manuscript-level outputs including:
-
-- fold-level generalized results;
-- subject-task individualized results;
-- cross-model summary tables;
-- temporal-shuffle sensitivity statistics;
-- robustness trajectories;
-- bootstrap confidence intervals;
-- movement-quality summaries;
-- SHAP attribution results;
-- attention summaries and visualizations.
-
-Intermediate checkpoints may be generated during long-running experiments to allow safe resumption.
-
-## Scope
-
-The code is intended to reproduce the experimental framework described in the associated manuscript.
-
-The individualized regime represents within-subject evaluation with available calibration data rather than longitudinal deployment.
-
-Robustness perturbations are synthetic test-time perturbations of skeletal trajectories and should be interpreted as controlled sensitivity tests.
-
-## Citation
-
-If you use this repository, please cite the associated manuscript.
-
-```bibtex
-@article{jalloul_deployment_aware_rehabilitation,
-  title   = {Deployment-Aware Evaluation of Interpretable Skeletal Representations for Rehabilitation Movement Assessment},
-  author  = {Jalloul, Basma and others},
-  journal = {Multimedia Tools and Applications},
-  year    = {2026},
-  note    = {Manuscript submitted for publication}
-}
-```
-
-Please update the citation metadata once the final publication details and DOI are available.
-
-## License
-
-This repository is provided for academic and research use.
-
-Please consult the licenses and terms of use of the original datasets separately.
+The public dataset records provide the original recordings and their terms of use. Please cite the accompanying manuscript and the relevant dataset publication when using these materials.
